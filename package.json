@@ -1,0 +1,37 @@
+{
+  "name": "@nathanfaucett/stores",
+  "version": "0.0.1",
+  "description": "redux like stores",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nathanfaucett/js-stores.git"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "test": "npm run test-node",
+    "test-node": "node ./test | ./node_modules/.bin/tap-spec",
+    "test-node-raw": "node ./test",
+    "test-browser-local": "zuul --local 9999 --ui tape -- ./test"
+  },
+  "keywords": [
+    "stores",
+    "stores.js"
+  ],
+  "author": "Nathan Faucett",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "@nathanfaucett/task": "^0.0.8",
+    "gulp-jsbeautifier": "^2.1.0",
+    "gulp-jshint": "^2.0.4",
+    "jshint": "^2.9.4",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.3",
+    "zuul": "^3.11.1"
+  },
+  "dependencies": {
+    "@nathanfaucett/index_of": "^0.0.1",
+    "@nathanfaucett/is_function": "^0.0.1",
+    "@nathanfaucett/is_undefined": "^0.0.1"
+  }
+}
