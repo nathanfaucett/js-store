@@ -1,36 +1,42 @@
-stores
+store [![Build Status](https://travis-ci.org/nathanfaucett/rs-store.svg?branch=master)](https://travis-ci.org/nathanfaucett/rs-store)
 =======
 
 redux like lib
 
 ```javascript
-var tape = require("tape"),
-    Store = require("..");
+var Store = require("@nathanfaucett/store");
 
 
 var count = 0,
     store = new Store();
 
 
-store.subscribe(function onDispatch(state) {
-    console.log(state.counter.count, count);
+store.subscribe(function onDispatch(state, action) {
+    console.log(state, action);
 });
 
 store.addMiddleware(function counterMiddleware(store, action, next) {
+
     switch (action.type) {
         case "INC":
-            return store.dispatch({
-                type: "INC_SUCCESS",
-                count: ++count
-            });
+            setTimeout(function() {
+                store.dispatch({
+                    type: "INC_SUCCESS",
+                    count: ++count
+                });
+            }, 100);
+            break;
         case "DEC":
-            return store.dispatch({
-                type: "DEC_SUCCESS",
-                count: --count
-            });
-        default:
-            return next(action);
+            setTimeout(function() {
+                store.dispatch({
+                    type: "DEC_SUCCESS",
+                    count: --count
+                });
+            }, 100);
+            break;
     }
+
+    next(action);
 });
 store.add(function counter(state, action) {
     switch (action.type) {

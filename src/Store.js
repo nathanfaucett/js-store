@@ -1,6 +1,6 @@
 var isFunction = require("@nathanfaucett/is_function"),
     isUndefined = require("@nathanfaucett/is_undefined"),
-    indexOf = require("@nathanfaucett/index_of");
+    List = require("@nathanfaucett/immutable-list");
 
 
 var StorePrototype = Store.prototype;
@@ -17,9 +17,9 @@ function Data(name, fn) {
 
 function Store() {
     this._state = {};
-    this._middleware = [];
-    this._reducers = [];
-    this._subscribers = [];
+    this._middleware = List.EMPTY;
+    this._reducers = List.EMPTY;
+    this._subscribers = List.EMPTY;
 }
 
 StorePrototype.setState = function(state) {
@@ -41,8 +41,8 @@ function Store_subscribe(_this, fn) {
         throw new Error("Store.subscribe(fn) trying to add " + fn + " to subscribers which is not a function");
     }
 
-    if (indexOf(subscribers, fn) === -1) {
-        subscribers.push(fn);
+    if (subscribers.indexOf(fn) === -1) {
+        _this._subscribers = subscribers.push(fn);
     }
 
     return function unsubscribe() {
@@ -56,10 +56,10 @@ StorePrototype.unsubscribe = function(fn) {
 
 function Store_unsubscribe(_this, fn) {
     var subscribers = _this._subscribers,
-        index = indexOf(subscribers, fn);
+        index = subscribers.indexOf(fn);
 
     if (index !== -1) {
-        subscribers.splice(index, 1);
+        _this._subscribers = subscribers.splice(index, 1);
     }
 
     return _this;
@@ -70,13 +70,13 @@ StorePrototype.dispatch = function(action) {
 };
 
 function Stores_dispatchMiddleware(_this, action) {
-    var middleware = _this._middleware,
-        index = 0,
-        length = middleware.length;
+    var iter = _this._middleware.iterator();
 
     (function next(action) {
-        if (index < length) {
-            middleware[index++](_this, action, next);
+        var it = iter.next();
+
+        if (!it.done) {
+            it.value(_this, action, next);
         } else {
             Stores_dispatch(_this, action);
         }
@@ -86,13 +86,12 @@ function Stores_dispatchMiddleware(_this, action) {
 function Stores_dispatch(_this, action) {
     var prevState = _this._state,
         nextState = {},
-        reducers = _this._reducers,
-        i = -1,
-        il = reducers.length - 1,
+        iter = _this._reducers.iterator(),
+        it = iter.next(),
         reducer, reducerName, reducerPrevState, reducerNextState;
 
-    while (i++ < il) {
-        reducer = reducers[i];
+    while (!it.done) {
+        reducer = it.value;
 
         reducerName = reducer.name;
 
@@ -104,23 +103,80 @@ function Stores_dispatch(_this, action) {
         }
 
         nextState[reducerName] = reducerNextState;
+
+        it = iter.next();
     }
 
     _this._state = nextState;
 
-    Store_emit(_this, nextState);
+    Store_emit(_this, nextState, action);
 
     return nextState;
 }
 
-function Store_emit(_this, state) {
-    var subscribers = _this._subscribers,
-        i = -1,
-        il = subscribers.length - 1;
+function Store_emit(_this, state, action) {
+    var iter = _this._subscribers.iterator(),
+        it = iter.next();
 
-    while (i++ < il) {
-        subscribers[i](state);
+    while (!it.done) {
+        it.value(state, action);
+        it = iter.next();
     }
+}
+
+StorePrototype.addMiddleware = function(fn) {
+    return Stores_addMiddleware(this, fn);
+};
+
+function Stores_addMiddleware(_this, fn) {
+    if (!isFunction(fn)) {
+        throw new Error("Store.addMiddleware(fn) trying to add " + fn + " to middleware which is not a function");
+    }
+
+    _this._middleware = _this._middleware.push(fn);
+
+    return function removeMiddleware() {
+        return Stores_removeMiddleware(_this, fn);
+    };
+}
+
+StorePrototype.removeMiddleware = function(fn) {
+    return Stores_removeMiddleware(this, fn);
+};
+
+function Stores_removeMiddleware(_this, fn) {
+    var middleware = _this._middleware,
+        index;
+
+    if (!isFunction(fn)) {
+        throw new Error("Store.removeMiddleware(fn) trying to remove " + fn + " from middleware which is not a function");
+    }
+
+    index = middleware.indexOf(fn);
+    if (index !== -1) {
+        _this._middleware = middleware.remove(index, 1);
+    }
+
+    return _this;
+}
+
+StorePrototype.hasMiddleware = function(fn) {
+    return middleware.indexOf(fn) !== -1;
+};
+
+function Stores_indexOf(_this, name) {
+    var iter = _this._reducers.iterator(),
+        it = iter.next();
+
+    while (!it.done) {
+        if (it.value.name === name) {
+            return i;
+        } else {
+            it = iter.next();
+        }
+    }
+
+    return -1;
 }
 
 StorePrototype.has = function(name) {
@@ -130,40 +186,11 @@ StorePrototype.has = function(name) {
     return Stores_indexOf(this, name) !== -1;
 };
 
-StorePrototype.addMiddleware = function(fn) {
-    return Stores_addMiddleware(this, fn);
-};
-
-function Stores_indexOf(_this, name) {
-    var reducers = _this._reducers,
-        i = -1,
-        il = reducers.length - 1;
-
-    while (i++ < il) {
-        reducer = reducers[i];
-
-        if (reducer.name === name) {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-function Stores_addMiddleware(_this, fn) {
-    if (!isFunction(fn)) {
-        throw new Error("Store.addMiddleware(fn) trying to add " + fn + " to middleware which is not a function");
-    }
-    _this._middleware.push(fn);
-}
-
 StorePrototype.add = function(name, fn) {
     return Stores_add(this, name, fn);
 };
 
 function Stores_add(_this, name, fn) {
-    var reducer;
-
     if (isFunction(name)) {
         fn = name;
         name = fn.name;
@@ -175,8 +202,7 @@ function Stores_add(_this, name, fn) {
     if (_this.has(name)) {
         throw new Error("Store.add(name, fn) reducer " + name + " already in reducers");
     } else {
-        reducer = new Data(name, fn);
-        _this._reducers.push(reducer);
+        _this._reducers = _this._reducers.push(new Data(name, fn));
     }
 
     return _this;
@@ -187,14 +213,17 @@ StorePrototype.remove = function(name) {
 };
 
 function Stores_remove(_this, name) {
+    var index;
+
     if (isFunction(name)) {
         name = fn.name;
     }
 
-    if (!_this.has(name)) {
+    index = Stores_indexOf(_this, name);
+    if (index === -1) {
         throw new Error("Store.remove(name) no reducer " + name + " in reducers");
     } else {
-        _this._reducers.splice(Stores_indexOf(_this, name), 1);
+        _this._reducers = _this._reducers.remove(index, 1);
     }
 
     return _this;

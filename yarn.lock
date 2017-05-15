@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@nathanfaucett/apply@^0.0.1":
+"@nathanfaucett/apply@0.0.1", "@nathanfaucett/apply@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@nathanfaucett/apply/-/apply-0.0.1.tgz#a52cfcf15276bf217a6e45ca059724e2c40cf8bc"
   dependencies:
@@ -44,6 +44,16 @@
     "@nathanfaucett/is_object" "^0.0.1"
     "@nathanfaucett/is_primitive" "^0.0.2"
 
+"@nathanfaucett/define_property@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@nathanfaucett/define_property/-/define_property-0.0.3.tgz#561f3e77f57f99bedeb152d2eaf62ab1ff09c185"
+  dependencies:
+    "@nathanfaucett/has" "^0.0.2"
+    "@nathanfaucett/is_function" "^0.0.1"
+    "@nathanfaucett/is_native" "^0.0.2"
+    "@nathanfaucett/is_object" "^0.0.1"
+    "@nathanfaucett/is_primitive" "^0.0.2"
+
 "@nathanfaucett/empty_function@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@nathanfaucett/empty_function/-/empty_function-0.0.1.tgz#abb5771428b283720eab6df7e58bdb00612bc8d6"
@@ -80,12 +90,25 @@
     "@nathanfaucett/is_native" "^0.0.2"
     "@nathanfaucett/keys" "^0.0.1"
 
+"@nathanfaucett/fast_bind_this@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@nathanfaucett/fast_bind_this/-/fast_bind_this-0.0.1.tgz#fd2a85590e2a506887513c4b92e06f0c2156ba58"
+  dependencies:
+    "@nathanfaucett/is_number" "^0.0.1"
+
 "@nathanfaucett/fast_slice@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@nathanfaucett/fast_slice/-/fast_slice-0.0.1.tgz#bd7c9aebb30db2e85214c62785c36d8fbbc24d07"
   dependencies:
     "@nathanfaucett/clamp" "0.0.1"
     "@nathanfaucett/is_number" "0.0.1"
+
+"@nathanfaucett/freeze@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@nathanfaucett/freeze/-/freeze-0.0.1.tgz#d93cc21ab0cc56612961e298a0316bc76e6c80f9"
+  dependencies:
+    "@nathanfaucett/empty_function" "^0.0.1"
+    "@nathanfaucett/is_native" "^0.0.2"
 
 "@nathanfaucett/get_prototype_of@0.0.1", "@nathanfaucett/get_prototype_of@^0.0.1":
   version "0.0.1"
@@ -111,11 +134,20 @@
     "@nathanfaucett/is_native" "^0.0.2"
     "@nathanfaucett/is_null_or_undefined" "^0.0.1"
 
-"@nathanfaucett/index_of@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@nathanfaucett/index_of/-/index_of-0.0.1.tgz#e7a0eff383e6b85fb5b6a589a38d2f8c0ec38625"
+"@nathanfaucett/immutable-list@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@nathanfaucett/immutable-list/-/immutable-list-0.0.3.tgz#05b8f23329de7502200db79ee719d26bbd5bef0b"
   dependencies:
+    "@nathanfaucett/define_property" "^0.0.3"
+    "@nathanfaucett/fast_bind_this" "^0.0.1"
+    "@nathanfaucett/fast_slice" "^0.0.1"
+    "@nathanfaucett/freeze" "^0.0.1"
+    "@nathanfaucett/is_array_like" "^0.0.2"
     "@nathanfaucett/is_equal" "^0.0.1"
+    "@nathanfaucett/is_null" "^0.0.1"
+    "@nathanfaucett/is_number" "^0.0.1"
+    "@nathanfaucett/is_undefined" "^0.0.1"
+    "@nathanfaucett/iterator" "^0.0.2"
 
 "@nathanfaucett/inherits@^0.0.3":
   version "0.0.3"
@@ -134,6 +166,14 @@
     "@nathanfaucett/is_native" "^0.0.2"
     "@nathanfaucett/is_object" "^0.0.1"
 
+"@nathanfaucett/is_array_like@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@nathanfaucett/is_array_like/-/is_array_like-0.0.2.tgz#5ca34f5587fd865d5f2b881e03039df5bd4b88e3"
+  dependencies:
+    "@nathanfaucett/is_function" "0.0.1"
+    "@nathanfaucett/is_length" "0.0.1"
+    "@nathanfaucett/is_object" "0.0.1"
+
 "@nathanfaucett/is_equal@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@nathanfaucett/is_equal/-/is_equal-0.0.1.tgz#575a40dad42a9d6aac9a83a0da47d6f7270f149c"
@@ -142,7 +182,7 @@
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@nathanfaucett/is_function/-/is_function-0.0.1.tgz#b75a1ae6d85196fae1a676b60d3a7f23673eba25"
 
-"@nathanfaucett/is_length@^0.0.1":
+"@nathanfaucett/is_length@0.0.1", "@nathanfaucett/is_length@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@nathanfaucett/is_length/-/is_length-0.0.1.tgz#2195b134d3d64c194eff5dbad80e65c471a8620d"
   dependencies:
@@ -190,6 +230,14 @@
 "@nathanfaucett/is_undefined@0.0.1", "@nathanfaucett/is_undefined@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@nathanfaucett/is_undefined/-/is_undefined-0.0.1.tgz#76bbed2e9c7264e2bef72220ec5fb9aeebd9464b"
+
+"@nathanfaucett/iterator@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@nathanfaucett/iterator/-/iterator-0.0.2.tgz#db08b7a69e7889db9667ada045117efa4b4632c9"
+  dependencies:
+    "@nathanfaucett/apply" "0.0.1"
+    "@nathanfaucett/is_function" "^0.0.1"
+    "@nathanfaucett/is_undefined" "^0.0.1"
 
 "@nathanfaucett/keys@^0.0.1":
   version "0.0.1"

@@ -1,10 +1,10 @@
 {
-  "name": "@nathanfaucett/stores",
+  "name": "@nathanfaucett/store",
   "version": "0.0.1",
-  "description": "redux like stores",
+  "description": "redux like store",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nathanfaucett/js-stores.git"
+    "url": "https://github.com/nathanfaucett/js-store.git"
   },
   "main": "src/index.js",
   "scripts": {
@@ -14,8 +14,8 @@
     "test-browser-local": "zuul --local 9999 --ui tape -- ./test"
   },
   "keywords": [
-    "stores",
-    "stores.js"
+    "store",
+    "store.js"
   ],
   "author": "Nathan Faucett",
   "license": "MIT",
@@ -30,7 +30,7 @@
     "zuul": "^3.11.1"
   },
   "dependencies": {
-    "@nathanfaucett/index_of": "^0.0.1",
+    "@nathanfaucett/immutable-list": "^0.0.3",
     "@nathanfaucett/is_function": "^0.0.1",
     "@nathanfaucett/is_undefined": "^0.0.1"
   }
