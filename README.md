@@ -4,11 +4,11 @@ store [![Build Status](https://travis-ci.org/nathanfaucett/js-store.svg?branch=m
 redux like lib
 
 ```javascript
-var Store = require("@nathanfaucett/store");
+var createStore = require("@nathanfaucett/store");
 
 
 var count = 0,
-    store = new Store();
+    store = new createStore();
 
 
 store.subscribe(function onDispatch(state, action) {
