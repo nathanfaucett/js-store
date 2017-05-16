@@ -1,4 +1,4 @@
-store [![Build Status](https://travis-ci.org/nathanfaucett/rs-store.svg?branch=master)](https://travis-ci.org/nathanfaucett/rs-store)
+store [![Build Status](https://travis-ci.org/nathanfaucett/js-store.svg?branch=master)](https://travis-ci.org/nathanfaucett/js-store)
 =======
 
 redux like lib

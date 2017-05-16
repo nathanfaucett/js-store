@@ -1,4 +1,5 @@
 var isFunction = require("@nathanfaucett/is_function"),
+    isNull = require("@nathanfaucett/is_null"),
     isUndefined = require("@nathanfaucett/is_undefined"),
     List = require("@nathanfaucett/immutable-list");
 
@@ -16,14 +17,18 @@ function Data(name, fn) {
 
 
 function Store() {
-    this._state = {};
+    this._state = null;
     this._middleware = List.EMPTY;
     this._reducers = List.EMPTY;
     this._subscribers = List.EMPTY;
 }
 
-StorePrototype.setState = function(state) {
-    this._state = state;
+StorePrototype.setInitialState = function(state) {
+    if (isNull(this._state)) {
+        this._state = state;
+    } else {
+        throw new Error("Store.setInitialState(state) trying to set inital state after state was set by ether dispatch or setInitialState");
+    }
 };
 
 StorePrototype.getState = function() {
@@ -46,7 +51,7 @@ function Store_subscribe(_this, fn) {
     }
 
     return function unsubscribe() {
-        return Store_unsubscribe(this, fn);
+        return _this.unsubscribe(fn);
     };
 }
 
@@ -59,7 +64,7 @@ function Store_unsubscribe(_this, fn) {
         index = subscribers.indexOf(fn);
 
     if (index !== -1) {
-        _this._subscribers = subscribers.splice(index, 1);
+        _this._subscribers = subscribers.remove(index, 1);
     }
 
     return _this;
@@ -84,7 +89,7 @@ function Stores_dispatchMiddleware(_this, action) {
 }
 
 function Stores_dispatch(_this, action) {
-    var prevState = _this._state,
+    var prevState = _this._state || {},
         nextState = {},
         iter = _this._reducers.iterator(),
         it = iter.next(),
@@ -136,7 +141,7 @@ function Stores_addMiddleware(_this, fn) {
     _this._middleware = _this._middleware.push(fn);
 
     return function removeMiddleware() {
-        return Stores_removeMiddleware(_this, fn);
+        return _this.removeMiddleware(fn);
     };
 }
 
@@ -209,7 +214,7 @@ function Stores_add(_this, name, fn) {
     }
 
     return function remove() {
-        return Stores_remove(_this, name);
+        return _this.remove(name);
     };
 }
 

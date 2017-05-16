@@ -53,7 +53,7 @@ tape("Store", function(assert) {
         }
     });
 
-    store.setState({
+    store.setInitialState({
         counter: {
             count: 0
         }
@@ -97,6 +97,28 @@ tape("Store.addMiddleware/hasMiddleware/removeMiddleware", function(assert) {
     assert.equals(store.hasMiddleware(middleware), true);
     removeMiddleware();
     assert.equals(store.hasMiddleware(middleware), false);
+
+    assert.end();
+});
+
+tape("Store.subscribe/unsubscribe", function(assert) {
+    var store = new Store(),
+        called = false,
+        unsubscribe;
+
+    function subscriber( /* state, action */ ) {
+        called = true;
+    }
+    unsubscribe = store.subscribe(subscriber);
+
+    store.dispatch();
+    assert.equals(called, true);
+
+    unsubscribe();
+    called = false;
+
+    store.dispatch();
+    assert.equals(called, false);
 
     assert.end();
 });
