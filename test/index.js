@@ -1,10 +1,10 @@
 var tape = require("tape"),
-    Store = require("..");
+    createStore = require("..");
 
 
-tape("Store", function(assert) {
+tape("store", function(assert) {
     var count = 0,
-        store = new Store();
+        store = createStore();
 
     store.subscribe(function onDispatch(state, action) {
         if (typeof(action.count) === "number") {
@@ -73,8 +73,8 @@ tape("Store", function(assert) {
     });
 });
 
-tape("Store.add/has/remove", function(assert) {
-    var store = new Store(),
+tape("store.add/has/remove", function(assert) {
+    var store = createStore(),
         remove;
 
     function reducer( /* state, action */ ) {}
@@ -87,8 +87,8 @@ tape("Store.add/has/remove", function(assert) {
     assert.end();
 });
 
-tape("Store.addMiddleware/hasMiddleware/removeMiddleware", function(assert) {
-    var store = new Store(),
+tape("store.addMiddleware/hasMiddleware/removeMiddleware", function(assert) {
+    var store = createStore(),
         removeMiddleware;
 
     function middleware( /* store, action, next */ ) {}
@@ -101,8 +101,8 @@ tape("Store.addMiddleware/hasMiddleware/removeMiddleware", function(assert) {
     assert.end();
 });
 
-tape("Store.subscribe/unsubscribe", function(assert) {
-    var store = new Store(),
+tape("store.subscribe/unsubscribe", function(assert) {
+    var store = createStore(),
         called = false,
         unsubscribe;
 
