@@ -32,6 +32,7 @@
   "dependencies": {
     "@nathanfaucett/immutable-list": "^0.0.3",
     "@nathanfaucett/is_function": "^0.0.1",
+    "@nathanfaucett/is_null": "^0.0.1",
     "@nathanfaucett/is_undefined": "^0.0.1"
   }
 }
