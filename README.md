@@ -53,7 +53,7 @@ store.add(function counter(state, action) {
     }
 });
 
-store.setState({
+store.setInitialState({
     counter: {
         count: 0
     }
