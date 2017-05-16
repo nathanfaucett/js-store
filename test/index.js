@@ -72,3 +72,31 @@ tape("Store", function(assert) {
         type: "DEC"
     });
 });
+
+tape("Store.add/has/remove", function(assert) {
+    var store = new Store(),
+        remove;
+
+    function reducer( /* state, action */ ) {}
+    remove = store.add(reducer);
+
+    assert.equals(store.has(reducer), true);
+    remove();
+    assert.equals(store.has(reducer), false);
+
+    assert.end();
+});
+
+tape("Store.addMiddleware/hasMiddleware/removeMiddleware", function(assert) {
+    var store = new Store(),
+        removeMiddleware;
+
+    function middleware( /* store, action, next */ ) {}
+    removeMiddleware = store.addMiddleware(middleware);
+
+    assert.equals(store.hasMiddleware(middleware), true);
+    removeMiddleware();
+    assert.equals(store.hasMiddleware(middleware), false);
+
+    assert.end();
+});

@@ -161,19 +161,22 @@ function Stores_removeMiddleware(_this, fn) {
 }
 
 StorePrototype.hasMiddleware = function(fn) {
-    return middleware.indexOf(fn) !== -1;
+    return this._middleware.indexOf(fn) !== -1;
 };
 
 function Stores_indexOf(_this, name) {
     var iter = _this._reducers.iterator(),
-        it = iter.next();
+        it = iter.next(),
+        index = 0;
 
     while (!it.done) {
         if (it.value.name === name) {
-            return i;
+            return index;
         } else {
             it = iter.next();
         }
+
+        index += 1;
     }
 
     return -1;
@@ -205,7 +208,9 @@ function Stores_add(_this, name, fn) {
         _this._reducers = _this._reducers.push(new Data(name, fn));
     }
 
-    return _this;
+    return function remove() {
+        return Stores_remove(_this, name);
+    };
 }
 
 StorePrototype.remove = function(name) {
