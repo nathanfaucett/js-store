@@ -3,50 +3,107 @@ var tape = require("tape"),
 
 
 tape("store", function(assert) {
-    var count = 0,
+    var COUNT = 1,
         store = createStore();
 
-    store.subscribe(function onDispatch(state, action) {
-        if (typeof(action.count) === "number") {
-            assert.equals(state.counter.count, count);
+    store.subscribe(function onDispatch(state) {
+        assert.equals(state.counter.count, COUNT);
 
-            if (state.counter.count === 0) {
-                assert.end();
-            }
+        if (state.counter.count === 0) {
+            assert.deepEquals(STATES, [{
+                state: {
+                    counter: {
+                        count: 1
+                    }
+                },
+                action: {
+                    type: "INC"
+                }
+            }, {
+                state: {
+                    counter: {
+                        count: 1
+                    }
+                },
+                action: {
+                    type: "DEC"
+                }
+            }, {
+                state: {
+                    counter: {
+                        count: 1
+                    }
+                },
+                action: {
+                    type: "DEC"
+                }
+            }, {
+                state: {
+                    counter: {
+                        count: 2
+                    }
+                },
+                action: {
+                    type: "INC_DONE",
+                    newCount: 2
+                }
+            }, {
+                state: {
+                    counter: {
+                        count: 1
+                    }
+                },
+                action: {
+                    type: "DEC_DONE",
+                    newCount: 1
+                }
+            }]);
+            assert.end();
         }
     });
 
+    var STATES = [];
+
+    store.addMiddleware(function dispatch(store, action, next) {
+        var nextState = next(action);
+
+        STATES.push({
+            state: nextState,
+            action: action
+        });
+
+        return nextState;
+    });
     store.addMiddleware(function counterMiddleware(store, action, next) {
         switch (action.type) {
             case "INC":
-                setTimeout(function() {
+                setTimeout(function onSetTimeout() {
                     store.dispatch({
-                        type: "INC_SUCCESS",
-                        count: ++count
+                        type: "INC_DONE",
+                        newCount: ++COUNT
                     });
-                }, 100);
+                }, 0);
                 break;
             case "DEC":
-                setTimeout(function() {
+                setTimeout(function onSetTimeout() {
                     store.dispatch({
-                        type: "DEC_SUCCESS",
-                        count: --count
+                        type: "DEC_DONE",
+                        newCount: --COUNT
                     });
-                }, 100);
+                }, 0);
                 break;
         }
-
-        next(action);
+        return next(action);
     });
     store.add(function counter(state, action) {
         switch (action.type) {
-            case "INC_SUCCESS":
+            case "INC_DONE":
                 return {
-                    count: action.count
+                    count: action.newCount
                 };
-            case "DEC_SUCCESS":
+            case "DEC_DONE":
                 return {
-                    count: action.count
+                    count: action.newCount
                 };
             default:
                 return state;
@@ -55,13 +112,10 @@ tape("store", function(assert) {
 
     store.setInitialState({
         counter: {
-            count: 0
+            count: COUNT
         }
     });
 
-    store.dispatch({
-        type: "INC"
-    });
     store.dispatch({
         type: "INC"
     });
@@ -111,13 +165,17 @@ tape("store.subscribe/unsubscribe", function(assert) {
     }
     unsubscribe = store.subscribe(subscriber);
 
-    store.dispatch();
+    store.dispatch({
+        type: "TEST"
+    });
     assert.equals(called, true);
 
     unsubscribe();
     called = false;
 
-    store.dispatch();
+    store.dispatch({
+        type: "TEST"
+    });
     assert.equals(called, false);
 
     assert.end();

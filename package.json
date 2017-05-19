@@ -1,6 +1,6 @@
 {
   "name": "@nathanfaucett/store",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "redux like store",
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
     "zuul": "^3.11.1"
   },
   "dependencies": {
+    "@nathanfaucett/empty_function": "^0.0.1",
     "@nathanfaucett/immutable-list": "^0.0.3",
     "@nathanfaucett/is_function": "^0.0.1",
     "@nathanfaucett/is_null": "^0.0.1",
